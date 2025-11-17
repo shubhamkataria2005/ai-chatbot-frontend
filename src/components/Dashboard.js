@@ -3,6 +3,8 @@ import './Dashboard.css';
 import Chat from './Chat';
 import SentimentAnalyzer from './tools/SentimentAnalyzer';
 import SalaryPredictor from './tools/SalaryPredictor';
+import RobotCar from './tools/RobotCar';
+import RetailDealsPredictor from './tools/RetailDealsPredictor'; 
 
 const Dashboard = ({ user, sessionToken, onLogout }) => {
   const [activeTool, setActiveTool] = useState('chat');
@@ -11,8 +13,9 @@ const Dashboard = ({ user, sessionToken, onLogout }) => {
     { id: 'chat', name: 'AI Chatbot', icon: '💬', description: 'Chat with AI assistant' },
     { id: 'sentiment', name: 'Sentiment Analyzer', icon: '📊', description: 'Analyze text emotions using AI' },
     { id: 'salary', name: 'Salary Predictor', icon: '💰', description: 'AI-powered salary estimates' },
-    { id: 'coming1', name: 'Image AI', icon: '🖼️', description: 'Coming soon!' },
-    { id: 'coming2', name: 'Code Helper', icon: '👨‍💻', description: 'Coming soon!' },
+    { id: 'robot', name: 'Robot Car', icon: '🚗', description: 'Control ESP32 robot with live video' },
+    { id: 'retail', name: 'Retail Deals Predictor', icon: '🛍️', description: 'Predict retail deals and discounts' }, 
+    { id: 'coming1', name: 'Image AI', icon: '🖼️', description: 'Coming soon!' }
   ];
 
   const renderActiveTool = () => {
@@ -23,6 +26,10 @@ const Dashboard = ({ user, sessionToken, onLogout }) => {
         return <SentimentAnalyzer sessionToken={sessionToken} />;
       case 'salary':
         return <SalaryPredictor sessionToken={sessionToken} />;
+      case 'robot':
+        return <RobotCar sessionToken={sessionToken} />;
+      case 'retail':
+        return <RetailDealsPredictor sessionToken={sessionToken} />; 
       default:
         return <ComingSoon toolName={tools.find(t => t.id === activeTool)?.name} />;
     }

@@ -8,7 +8,7 @@ const RobotCar = ({ sessionToken }) => {
   const [videoUrl, setVideoUrl] = useState('');
 
   // Default IP - change this to your ESP32's IP
-  const defaultIP = '192.168.1.100';
+  const defaultIP = '192.168.4.1';
 
   const connectToRobot = () => {
     if (!robotIP.trim()) {

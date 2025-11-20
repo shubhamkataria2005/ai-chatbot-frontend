@@ -920,3 +920,143 @@
   font-size: 0.9rem;
   margin-top: 5px;
 }
+
+/* Weather Predictor Styles */
+.weather-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+  padding: 30px;
+  border-radius: 15px;
+  margin: 20px 0;
+  border: 2px solid #4fc3f7;
+}
+
+.weather-icon {
+  font-size: 4rem;
+  margin-right: 30px;
+}
+
+.weather-details {
+  text-align: left;
+}
+
+.temperature {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #0277bd;
+  margin-bottom: 5px;
+}
+
+.condition {
+  font-size: 1.5rem;
+  color: #01579b;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.rainfall {
+  font-size: 1.1rem;
+  color: #0288d1;
+}
+
+.location-info {
+  background: #e1f5fe;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 15px;
+  border-left: 4px solid #0288d1;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.sample-btn {
+  padding: 16px;
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.sample-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+}
+
+/* Car Recognizer Styles */
+.image-upload-area {
+  margin-bottom: 20px;
+}
+
+.upload-label {
+  display: block;
+  cursor: pointer;
+  border: 2px dashed #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.upload-label:hover {
+  border-color: #4f46e5;
+  background: #f8fafc;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+}
+
+.upload-placeholder {
+  padding: 40px;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.car-result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+  padding: 30px;
+  border-radius: 15px;
+  margin: 20px 0;
+  border: 2px solid #4fc3f7;
+}
+
+.brand-emoji {
+  font-size: 4rem;
+  margin-right: 25px;
+}
+
+.brand-details {
+  text-align: left;
+}
+
+.brand-name {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #0277bd;
+  margin-bottom: 8px;
+}
+
+.confidence {
+  font-size: 1.2rem;
+  color: #0288d1;
+  font-weight: 600;
+}

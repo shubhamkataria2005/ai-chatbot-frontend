@@ -4,6 +4,8 @@ import Chat from './Chat';
 import SentimentAnalyzer from './tools/SentimentAnalyzer';
 import SalaryPredictor from './tools/SalaryPredictor';
 import RobotCar from './tools/RobotCar';
+import WeatherPredictor from './tools/WeatherPredictor';
+import CarRecognizer from './tools/CarRecognizer';
 import RetailDealsPredictor from './tools/RetailDealsPredictor'; 
 
 const Dashboard = ({ user, sessionToken, onLogout }) => {
@@ -11,11 +13,12 @@ const Dashboard = ({ user, sessionToken, onLogout }) => {
 
   const tools = [
     { id: 'chat', name: 'AI Chatbot', icon: '💬', description: 'Chat with AI assistant' },
-    { id: 'sentiment', name: 'Sentiment Analyzer', icon: '📊', description: 'Analyze text emotions using AI' },
     { id: 'salary', name: 'Salary Predictor', icon: '💰', description: 'AI-powered salary estimates' },
+    { id: 'retail', name: 'Retail Deals Predictor', icon: '🛍️', description: 'Predict retail deals and discounts' },
+    { id: 'sentiment', name: 'Sentiment Analyzer', icon: '📊', description: 'Analyze text emotions using AI' },
+    { id: 'weather', name: 'Weather Predictor', icon: '🌤️', description: 'Next-day weather forecasts' }, 
+    { id: 'car', name: 'Car Recognizer', icon: '🚗', description: 'Identify BMW, Mercedes, or Audi from photos' },
     { id: 'robot', name: 'Robot Car', icon: '🚗', description: 'Control ESP32 robot with live video' },
-    { id: 'retail', name: 'Retail Deals Predictor', icon: '🛍️', description: 'Predict retail deals and discounts' }, 
-    { id: 'coming1', name: 'Image AI', icon: '🖼️', description: 'Coming soon!' }
   ];
 
   const renderActiveTool = () => {
@@ -30,6 +33,10 @@ const Dashboard = ({ user, sessionToken, onLogout }) => {
         return <RobotCar sessionToken={sessionToken} />;
       case 'retail':
         return <RetailDealsPredictor sessionToken={sessionToken} />; 
+      case 'weather':
+        return <WeatherPredictor sessionToken={sessionToken} />;
+      case 'car':
+        return <CarRecognizer sessionToken={sessionToken} />;
       default:
         return <ComingSoon toolName={tools.find(t => t.id === activeTool)?.name} />;
     }

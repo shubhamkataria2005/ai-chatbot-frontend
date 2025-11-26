@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Tools.css';
+import { API_BASE_URL } from '../../config';
 
 const SentimentAnalyzer = ({ sessionToken }) => {
   const [text, setText] = useState('');
@@ -15,7 +16,7 @@ const SentimentAnalyzer = ({ sessionToken }) => {
     setResult(null);
 
     try {
-      const response = await fetch('http://localhost:8080/api/ai-tools/sentiment-analysis', {
+      const response = await fetch(`${API_BASE_URL}/api/ai-tools/sentiment-analysis`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

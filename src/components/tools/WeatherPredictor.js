@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Tools.css';
+import { API_BASE_URL } from '../../config';
 
 const WeatherPredictor = ({ sessionToken }) => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const WeatherPredictor = ({ sessionToken }) => {
     setPrediction(null);
 
     try {
-      const response = await fetch('http://localhost:8080/api/ai-tools/weather-prediction', {
+      const response = await fetch(`${API_BASE_URL}/api/ai-tools/weather-prediction`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

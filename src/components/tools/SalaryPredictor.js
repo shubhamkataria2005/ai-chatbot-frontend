@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Tools.css';
+import { API_BASE_URL } from '../../config'
 
 const SalaryPredictor = ({ sessionToken }) => {
   const [formData, setFormData] = useState({
@@ -52,7 +53,7 @@ const SalaryPredictor = ({ sessionToken }) => {
     setPrediction(null);
 
     try {
-      const response = await fetch('http://localhost:8080/api/ai-tools/salary-prediction', {
+      const response = await fetch(`${API_BASE_URL}/api/ai-tools/salary-prediction`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

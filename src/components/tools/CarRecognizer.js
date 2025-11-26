@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Tools.css';
+import { API_BASE_URL } from '../../config';
 
 const CarRecognizer = ({ sessionToken }) => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -34,7 +35,7 @@ const CarRecognizer = ({ sessionToken }) => {
       const formData = new FormData();
       formData.append('image', file);
 
-      const apiResponse = await fetch('http://localhost:8080/api/ai-tools/car-recognition', {
+      const apiResponse = await fetch(`${API_BASE_URL}/api/ai-tools/car-recognition`, {
         method: 'POST',
         headers: {
           'Authorization': sessionToken

@@ -3,6 +3,7 @@ import './App.css';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
+import { API_BASE_URL } from './config';
 
 function App() {
   const [currentView, setCurrentView] = useState('login');
@@ -25,7 +26,7 @@ function App() {
 
   const validateSession = async (token, savedUser) => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/validate', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/validate`, {
         method: 'GET',
         headers: {
           'Authorization': token
@@ -64,7 +65,7 @@ function App() {
     if (sessionToken) {
       try {
         // Call logout API
-        await fetch('http://localhost:8080/api/auth/logout', {
+        await fetch(`${API_BASE_URL}/api/auth/logout`, {
           method: 'POST',
           headers: {
             'Authorization': sessionToken

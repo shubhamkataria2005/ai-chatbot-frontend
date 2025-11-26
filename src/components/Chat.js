@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Chat.css';
+import { API_BASE_URL } from '../config';
 
 const Chat = ({ user, sessionToken }) => {
   const [messages, setMessages] = useState([
@@ -27,7 +28,7 @@ const Chat = ({ user, sessionToken }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/chat/send', {
+      const response = await fetch(`${API_BASE_URL}/api/chat/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

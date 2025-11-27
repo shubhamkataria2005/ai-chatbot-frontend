@@ -18,6 +18,8 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 1001;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
 }
 
 .menu-button {
@@ -188,6 +190,7 @@
   overflow: auto;
   background: #f8fafc;
   min-height: 30vh;
+  width: 100%;
 }
 
 .coming-soon {
@@ -264,6 +267,8 @@
     max-height: none;
     transform: translateX(-100%);
     z-index: 1000;
+    width: 85%;
+    max-width: 300px;
   }
 
   .sidebar.mobile-open {
@@ -274,12 +279,17 @@
     display: flex;
   }
 
-  .mobile-overlay {
+  .mobile-overlay.mobile-open {
     display: block;
   }
 
   .sidebar-header {
-    display: none;
+    display: flex;
+  }
+
+  .main-content {
+    height: calc(100vh - 70px);
+    margin-top: 0;
   }
 }
 
@@ -331,6 +341,10 @@
   
   .tool-desc {
     font-size: 0.8rem;
+  }
+
+  .mobile-menu-toggle {
+    display: none;
   }
 }
 

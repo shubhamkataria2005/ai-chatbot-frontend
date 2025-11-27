@@ -48,6 +48,11 @@ const Dashboard = ({ user, sessionToken, onLogout }) => {
     }
   };
 
+  const getCurrentToolName = () => {
+    const currentTool = tools.find(tool => tool.id === activeTool);
+    return currentTool ? currentTool.name : 'AI Studio';
+  };
+
   return (
     <div className="dashboard">
       {/* Mobile Menu Toggle */}
@@ -59,7 +64,7 @@ const Dashboard = ({ user, sessionToken, onLogout }) => {
           ☰
         </button>
         <div className="mobile-header">
-          <h2>🤖 SHUBHAM AI Studio</h2>
+          <h2>{getCurrentToolName()}</h2>
           <p>Welcome, {user.username}!</p>
         </div>
       </div>

@@ -10,7 +10,6 @@ import RetailDealsPredictor from './tools/RetailDealsPredictor';
 
 const Dashboard = ({ user, sessionToken, onLogout }) => {
   const [activeTool, setActiveTool] = useState('chat');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const tools = [
     { id: 'chat', name: 'AI Chatbot', icon: '💬', description: 'Chat with AI assistant' },
@@ -24,7 +23,6 @@ const Dashboard = ({ user, sessionToken, onLogout }) => {
 
   const handleToolClick = (toolId) => {
     setActiveTool(toolId);
-    setMobileMenuOpen(false); // Close mobile menu when tool is selected
   };
 
   const renderActiveTool = () => {
@@ -48,29 +46,31 @@ const Dashboard = ({ user, sessionToken, onLogout }) => {
     }
   };
 
-  const getCurrentToolName = () => {
-    const currentTool = tools.find(tool => tool.id === activeTool);
-    return currentTool ? currentTool.name : 'AI Studio';
-  };
-
   return (
     <div className="dashboard">
-      {/* Mobile Menu Toggle */}
-      <div className="mobile-menu-toggle">
-        <button 
-          className="menu-button"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          ☰
-        </button>
-        <div className="mobile-header">
-          <h2>{getCurrentToolName()}</h2>
-          <p>Welcome, {user.username}!</p>
+      {/* Mobile Header with Scrollable Tools */}
+      <div className="mobile-header">
+        <div className="mobile-tools-scroll">
+          {tools.map(tool => (
+            <div
+              key={tool.id}
+              className={`mobile-tool-item ${activeTool === tool.id ? 'active' : ''}`}
+              onClick={() => handleToolClick(tool.id)}
+            >
+              <span className="mobile-tool-icon">{tool.icon}</span>
+              <span className="mobile-tool-name">{tool.name}</span>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Sidebar */}
-      <div className={`sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+      {/* Main Content */}
+      <div className="main-content">
+        {renderActiveTool()}
+      </div>
+
+      {/* Desktop Sidebar - Only visible on desktop */}
+      <div className="desktop-sidebar">
         <div className="sidebar-header">
           <h2>🤖 SHUBHAM AI Studio</h2>
           <p>Welcome, {user.username}!</p>
@@ -95,27 +95,6 @@ const Dashboard = ({ user, sessionToken, onLogout }) => {
         <button className="logout-btn" onClick={onLogout}>
           Logout
         </button>
-
-        {/* Mobile Close Button */}
-        <button 
-          className="mobile-close-btn"
-          onClick={() => setMobileMenuOpen(false)}
-        >
-          ✕
-        </button>
-      </div>
-
-      {/* Overlay for mobile menu */}
-      {mobileMenuOpen && (
-        <div 
-          className="mobile-overlay"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* Main Content */}
-      <div className="main-content">
-        {renderActiveTool()}
       </div>
     </div>
   );

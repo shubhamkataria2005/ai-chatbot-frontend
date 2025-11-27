@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Tools.css';
-import { API_BASE_URL } from '../../config';
+
 
 const RetailDealsPredictor = ({ sessionToken }) => {
   const [activeTab, setActiveTab] = useState('upload');

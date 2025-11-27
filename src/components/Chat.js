@@ -124,26 +124,30 @@ const Chat = ({ user, sessionToken }) => {
       </div>
 
       {/* Messages */}
-      <div className="messages-container">
-        {messages.map((message, index) => (
-          <div key={index} className={`message ${message.sender}`}>
-            <div className="message-bubble">
+      <div className="messages-container-wrapper">
+        <div className="messages-container">
+          <div className="messages-content">
+            {messages.map((message, index) => (
+            <div key={index} className={`message ${message.sender}`}>
+              <div className="message-bubble">
               {message.text}
             </div>
           </div>
-        ))}
-        {isLoading && (
-          <div className="message bot">
-            <div className="message-bubble loading">
-              <div className="typing-dots">
-                <span></span>
-                <span></span>
-                <span></span>
+          ))}
+             {isLoading && (
+              <div className="message bot">
+                <div className="message-bubble loading">
+                 <div className="typing-dots">
+                   <span></span>
+                   <span></span>
+                   <span></span>
+                 </div>
+               </div>
               </div>
-            </div>
+             )}
+            <div ref={messagesEndRef} />
           </div>
-        )}
-        <div ref={messagesEndRef} />
+        </div>
       </div>
 
       {/* Input */}

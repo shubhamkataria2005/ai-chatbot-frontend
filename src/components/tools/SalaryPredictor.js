@@ -224,7 +224,7 @@ const SalaryPredictor = ({ sessionToken }) => {
           <h3>🎯 ML-Predicted Salary</h3>
           <div className="salary-display">
             <span className="salary-amount">
-              {formatSalary(prediction.predictedSalary, prediction.currency)}
+              {formatSalary(prediction.salary, prediction.currency)}
             </span>
             <span className="salary-period">/year</span>
           </div>

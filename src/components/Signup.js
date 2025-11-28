@@ -25,8 +25,11 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin, onSwitchToChat }) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
 
     try {
+      console.log('📝 Attempting signup...', formData);
+      
       const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
@@ -35,18 +38,45 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin, onSwitchToChat }) => {
         body: JSON.stringify(formData)
       });
 
+      console.log('📡 Signup response status:', response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log('✅ Signup API response:', data);
 
       if (data.success) {
         setSuccess('Account created successfully! Redirecting...');
-        setTimeout(() => {
-          onSignupSuccess(data.user, data.sessionToken);
-        }, 1500);
+        
+        // Check if we have user data and session token
+        if (data.user && data.sessionToken) {
+          console.log('✅ Signup data valid, proceeding with auto-login...');
+          setTimeout(() => {
+            onSignupSuccess(data.user, data.sessionToken);
+          }, 1500);
+        } else if (data.userId) {
+          // If backend only returns userId (not full user data), redirect to login
+          console.log('⚠️ Backend returned userId but no user data, redirecting to login');
+          setSuccess('Account created! Please login with your credentials.');
+          setTimeout(() => {
+            onSwitchToLogin();
+          }, 2000);
+        } else {
+          // Generic success but no user data
+          console.log('✅ Account created, redirecting to login');
+          setSuccess('Account created successfully! Please login.');
+          setTimeout(() => {
+            onSwitchToLogin();
+          }, 1500);
+        }
       } else {
-        setError(data.message || 'Registration failed');
+        setError(data.message || 'Registration failed. Please try again.');
       }
     } catch (error) {
-      setError('Network error. Please try again.');
+      console.error('❌ Signup error:', error);
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -71,6 +101,7 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin, onSwitchToChat }) => {
               onChange={handleChange}
               required
               placeholder="Choose a username"
+              disabled={loading}
             />
           </div>
           
@@ -83,6 +114,7 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin, onSwitchToChat }) => {
               onChange={handleChange}
               required
               placeholder="Enter your email"
+              disabled={loading}
             />
           </div>
           
@@ -95,6 +127,7 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin, onSwitchToChat }) => {
               onChange={handleChange}
               required
               placeholder="Create a password"
+              disabled={loading}
             />
           </div>
           
@@ -119,6 +152,7 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin, onSwitchToChat }) => {
             type="button"
             className="back-button"
             onClick={onSwitchToChat}
+            disabled={loading}
           >
             ← Back to Public Chat
           </button>

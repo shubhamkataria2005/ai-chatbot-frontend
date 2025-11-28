@@ -11,21 +11,40 @@ function App() {
   const [user, setUser] = useState(null);
   const [sessionToken, setSessionToken] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Check if user is already logged in
+  // Check if user is already logged in - FIXED JSON PARSE
   useEffect(() => {
     const token = localStorage.getItem('sessionToken');
     const savedUser = localStorage.getItem('user');
     
-    if (token && savedUser) {
-      validateSession(token, JSON.parse(savedUser));
+    console.log('🔍 App mounted - Checking auth:', { token, savedUser });
+    
+    // FIX: Safe JSON parsing
+    let parsedUser = null;
+    if (savedUser) {
+      try {
+        parsedUser = JSON.parse(savedUser);
+      } catch (error) {
+        console.error('❌ Error parsing user from localStorage:', error);
+        // Clear corrupted data
+        localStorage.removeItem('user');
+        localStorage.removeItem('sessionToken');
+      }
+    }
+    
+    if (token && parsedUser) {
+      validateSession(token, parsedUser);
     } else {
+      console.log('🚫 No valid session found');
       setLoading(false);
+      setCurrentView('public-chat');
     }
   }, []);
 
   const validateSession = async (token, savedUser) => {
     try {
+      console.log('🔐 Validating session...');
       const response = await fetch(`${API_BASE_URL}/api/auth/validate`, {
         method: 'GET',
         headers: {
@@ -33,33 +52,65 @@ function App() {
         }
       });
       
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
+      console.log('✅ Session validation response:', data);
       
       if (data.valid) {
+        console.log('✅ Session valid, going to dashboard');
         setSessionToken(token);
         setUser(savedUser);
         setCurrentView('dashboard');
       } else {
+        console.log('❌ Session invalid, clearing storage');
         localStorage.removeItem('sessionToken');
         localStorage.removeItem('user');
+        setCurrentView('public-chat');
       }
     } catch (error) {
-      console.error('Session validation failed:', error);
+      console.error('❌ Session validation failed:', error);
+      // On error, fall back to public chat
+      localStorage.removeItem('sessionToken');
+      localStorage.removeItem('user');
+      setCurrentView('public-chat');
     } finally {
       setLoading(false);
     }
   };
 
   const handleLoginSuccess = (userData, token) => {
+    console.log('✅ Login/Signup successful:', { userData, token });
+    
+    // Validate that we have the required data
+    if (!userData || !token) {
+      console.error('❌ Missing userData or token in handleLoginSuccess');
+      setError('Authentication failed. Please try logging in again.');
+      setCurrentView('login');
+      return;
+    }
+
     setUser(userData);
     setSessionToken(token);
     setCurrentView('dashboard');
     
-    localStorage.setItem('sessionToken', token);
-    localStorage.setItem('user', JSON.stringify(userData));
+    // Store in localStorage - FIXED: Safe stringify
+    try {
+      localStorage.setItem('sessionToken', token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      console.log('✅ User stored in localStorage');
+    } catch (error) {
+      console.error('❌ Error storing in localStorage:', error);
+    }
+    
+    console.log('✅ User stored, redirecting to dashboard');
   };
 
   const handleLogout = async () => {
+    console.log('🚪 Logging out...');
+    
     if (sessionToken) {
       try {
         await fetch(`${API_BASE_URL}/api/auth/logout`, {
@@ -76,14 +127,33 @@ function App() {
     setUser(null);
     setSessionToken(null);
     setCurrentView('public-chat');
-    localStorage.removeItem('sessionToken');
-    localStorage.removeItem('user');
+    
+    // FIXED: Safe localStorage removal
+    try {
+      localStorage.removeItem('sessionToken');
+      localStorage.removeItem('user');
+    } catch (error) {
+      console.error('❌ Error clearing localStorage:', error);
+    }
   };
 
-  const switchToSignup = () => setCurrentView('signup');
-  const switchToLogin = () => setCurrentView('login');
-  const switchToPublicChat = () => setCurrentView('public-chat');
+  const switchToSignup = () => {
+    console.log('🔄 Switching to signup');
+    setCurrentView('signup');
+  };
+
+  const switchToLogin = () => {
+    console.log('🔄 Switching to login');
+    setCurrentView('login');
+  };
+
+  const switchToPublicChat = () => {
+    console.log('🔄 Switching to public chat');
+    setCurrentView('public-chat');
+  };
+
   const switchToDashboard = () => {
+    console.log('🔄 Switching to dashboard');
     if (user) {
       setCurrentView('dashboard');
     } else {
@@ -103,6 +173,8 @@ function App() {
       </div>
     );
   }
+
+  console.log('🎯 Current view:', currentView);
 
   return (
     <div className="App">
@@ -179,6 +251,19 @@ function App() {
             onLogout={handleLogout}
             onSwitchToChat={switchToPublicChat}
           />
+        )}
+
+        {/* Error Fallback - If something goes wrong */}
+        {!currentView && (
+          <div className="error-fallback">
+            <div className="error-content">
+              <h2>😕 Something went wrong</h2>
+              <p>Please refresh the page or try going back to the main chat.</p>
+              <button onClick={switchToPublicChat} className="auth-button">
+                Back to Main Chat
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

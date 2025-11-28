@@ -24,6 +24,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup, onSwitchToChat }) => {
     setError('');
 
     try {
+      console.log('🔐 Attempting login...');
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -32,15 +33,24 @@ const Login = ({ onLoginSuccess, onSwitchToSignup, onSwitchToChat }) => {
         body: JSON.stringify(formData)
       });
 
+      console.log('📡 Login response status:', response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log('✅ Login API response:', data);
 
       if (data.success) {
+        console.log('✅ Login successful, calling onLoginSuccess');
         onLoginSuccess(data.user, data.sessionToken);
       } else {
-        setError(data.message || 'Login failed');
+        setError(data.message || 'Login failed. Please check your credentials.');
       }
     } catch (error) {
-      setError('Network error. Please try again.');
+      console.error('❌ Login error:', error);
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -64,6 +74,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup, onSwitchToChat }) => {
               onChange={handleChange}
               required
               placeholder="Enter your email"
+              disabled={loading}
             />
           </div>
           
@@ -76,6 +87,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup, onSwitchToChat }) => {
               onChange={handleChange}
               required
               placeholder="Enter your password"
+              disabled={loading}
             />
           </div>
           
@@ -100,6 +112,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup, onSwitchToChat }) => {
             type="button"
             className="back-button"
             onClick={onSwitchToChat}
+            disabled={loading}
           >
             ← Back to Public Chat
           </button>

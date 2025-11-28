@@ -7,10 +7,12 @@ import RobotCar from './tools/RobotCar';
 import WeatherPredictor from './tools/WeatherPredictor';
 import CarRecognizer from './tools/CarRecognizer';
 import RetailDealsPredictor from './tools/RetailDealsPredictor';
+import Profile from './Profile';
 
 const Dashboard = ({ user, sessionToken, onLogout, onSwitchToChat }) => {
   const [activeTool, setActiveTool] = useState('chat');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   const tools = [
     { id: 'chat', name: 'AI Chatbot', icon: '💬', description: 'Chat with AI assistant' },
@@ -25,14 +27,29 @@ const Dashboard = ({ user, sessionToken, onLogout, onSwitchToChat }) => {
   const handleToolClick = (toolId) => {
     setActiveTool(toolId);
     setShowMobileMenu(false);
+    setShowProfile(false);
+  };
+
+  const handleProfileClick = () => {
+    setShowProfile(true);
+    setShowMobileMenu(false);
+  };
+
+  const handleBackToDashboard = () => {
+    setShowProfile(false);
   };
 
   const handleLogout = () => {
+    setShowProfile(false);
     setShowMobileMenu(false);
     onLogout();
   };
 
   const renderActiveTool = () => {
+    if (showProfile) {
+      return <Profile user={user} onLogout={handleLogout} onBackToDashboard={handleBackToDashboard} />;
+    }
+
     switch (activeTool) {
       case 'chat':
         return <Chat user={user} sessionToken={sessionToken} />;
@@ -63,7 +80,7 @@ const Dashboard = ({ user, sessionToken, onLogout, onSwitchToChat }) => {
               className="menu-button"
               onClick={() => setShowMobileMenu(!showMobileMenu)}
             >
-              ☰
+              👤
             </button>
           </div>
           <div className="mobile-welcome">
@@ -87,12 +104,12 @@ const Dashboard = ({ user, sessionToken, onLogout, onSwitchToChat }) => {
           </div>
         </div>
 
-        {/* Mobile Menu Overlay */}
+        {/* Mobile Menu Overlay - Profile Menu */}
         {showMobileMenu && (
           <div className="mobile-menu-overlay">
             <div className="mobile-menu-content">
               <div className="mobile-menu-header">
-                <h3>🤖 SHUBHAM AI Studio</h3>
+                <h3>👤 User Profile</h3>
                 <button 
                   className="close-menu"
                   onClick={() => setShowMobileMenu(false)}
@@ -100,7 +117,25 @@ const Dashboard = ({ user, sessionToken, onLogout, onSwitchToChat }) => {
                   ✕
                 </button>
               </div>
+              
+              {/* Simple User Info */}
+              <div className="mobile-user-info">
+                <div className="mobile-user-avatar">
+                  {user.username?.charAt(0).toUpperCase() || 'U'}
+                </div>
+                <div className="mobile-user-details">
+                  <div className="mobile-username">{user.username}</div>
+                  <div className="mobile-user-email">{user.email}</div>
+                </div>
+              </div>
+
               <div className="mobile-menu-items">
+                <button 
+                  className="mobile-menu-item"
+                  onClick={handleProfileClick}
+                >
+                  👤 View Full Profile
+                </button>
                 <button 
                   className="mobile-menu-item logout"
                   onClick={handleLogout}
@@ -113,7 +148,7 @@ const Dashboard = ({ user, sessionToken, onLogout, onSwitchToChat }) => {
         )}
       </div>
 
-      {/* Main Content - No fixed margins, let flexbox handle it */}
+      {/* Main Content */}
       <div className="main-content">
         {renderActiveTool()}
       </div>
@@ -141,8 +176,8 @@ const Dashboard = ({ user, sessionToken, onLogout, onSwitchToChat }) => {
           ))}
         </div>
 
-        <button className="logout-btn" onClick={onLogout}>
-          Logout
+        <button className="profile-btn" onClick={handleProfileClick}>
+          👤 Profile
         </button>
       </div>
     </div>

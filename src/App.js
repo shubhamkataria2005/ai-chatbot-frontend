@@ -3,10 +3,11 @@ import './App.css';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
+import Chat from './components/Chat';
 import { API_BASE_URL } from './config';
 
 function App() {
-  const [currentView, setCurrentView] = useState('login');
+  const [currentView, setCurrentView] = useState('public-chat');
   const [user, setUser] = useState(null);
   const [sessionToken, setSessionToken] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,6 @@ function App() {
     const savedUser = localStorage.getItem('user');
     
     if (token && savedUser) {
-      // Validate session with backend
       validateSession(token, JSON.parse(savedUser));
     } else {
       setLoading(false);
@@ -40,7 +40,6 @@ function App() {
         setUser(savedUser);
         setCurrentView('dashboard');
       } else {
-        // Session invalid, clear storage
         localStorage.removeItem('sessionToken');
         localStorage.removeItem('user');
       }
@@ -56,7 +55,6 @@ function App() {
     setSessionToken(token);
     setCurrentView('dashboard');
     
-    // Save to localStorage
     localStorage.setItem('sessionToken', token);
     localStorage.setItem('user', JSON.stringify(userData));
   };
@@ -64,7 +62,6 @@ function App() {
   const handleLogout = async () => {
     if (sessionToken) {
       try {
-        // Call logout API
         await fetch(`${API_BASE_URL}/api/auth/logout`, {
           method: 'POST',
           headers: {
@@ -76,16 +73,23 @@ function App() {
       }
     }
     
-    // Clear state and storage
     setUser(null);
     setSessionToken(null);
-    setCurrentView('login');
+    setCurrentView('public-chat');
     localStorage.removeItem('sessionToken');
     localStorage.removeItem('user');
   };
 
   const switchToSignup = () => setCurrentView('signup');
   const switchToLogin = () => setCurrentView('login');
+  const switchToPublicChat = () => setCurrentView('public-chat');
+  const switchToDashboard = () => {
+    if (user) {
+      setCurrentView('dashboard');
+    } else {
+      setCurrentView('login');
+    }
+  };
 
   // Show loading screen while checking authentication
   if (loading) {
@@ -102,25 +106,60 @@ function App() {
 
   return (
     <div className="App">
+      {/* Public Chat - Default landing page for guests */}
+      {currentView === 'public-chat' && (
+        <div className="public-chat-container">
+          <div className="public-header">
+            <div className="header-content">
+              <h1>🤖 SHUBHAM AI Studio</h1>
+              <p>Chat with our AI assistant - No login required!</p>
+              <p className="premium-tools">✨ Sign up for premium AI tools</p>
+            </div>
+            <div className="auth-buttons">
+              {!user ? (
+                <>
+                  <button className="auth-btn" onClick={switchToLogin}>
+                    Login
+                  </button>
+                  <button className="auth-btn signup" onClick={switchToSignup}>
+                    Sign Up
+                  </button>
+                </>
+              ) : (
+                <button className="auth-btn dashboard" onClick={switchToDashboard}>
+                  🚀 Go to Dashboard
+                </button>
+              )}
+            </div>
+          </div>
+          <Chat user={user || { username: 'Guest' }} sessionToken={sessionToken} />
+        </div>
+      )}
+      
+      {/* Authentication Views */}
       {currentView === 'login' && (
         <Login 
           onLoginSuccess={handleLoginSuccess}
           onSwitchToSignup={switchToSignup}
+          onSwitchToChat={switchToPublicChat}
         />
       )}
       
       {currentView === 'signup' && (
         <Signup 
-          onSignupSuccess={switchToLogin}
+          onSignupSuccess={handleLoginSuccess}
           onSwitchToLogin={switchToLogin}
+          onSwitchToChat={switchToPublicChat}
         />
       )}
       
+      {/* Dashboard - Only for authenticated users */}
       {currentView === 'dashboard' && user && (
         <Dashboard 
           user={user}
           sessionToken={sessionToken}
           onLogout={handleLogout}
+          onSwitchToChat={switchToPublicChat}
         />
       )}
     </div>

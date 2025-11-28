@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Auth.css';
 import { API_BASE_URL } from '../config';
 
-const Signup = ({ onSignupSuccess, onSwitchToLogin }) => {
+const Signup = ({ onSignupSuccess, onSwitchToLogin, onSwitchToChat }) => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -38,10 +38,10 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin }) => {
       const data = await response.json();
 
       if (data.success) {
-        setSuccess('Account created successfully! Please sign in.');
+        setSuccess('Account created successfully! Redirecting...');
         setTimeout(() => {
-          onSignupSuccess();
-        }, 2000);
+          onSignupSuccess(data.user, data.sessionToken);
+        }, 1500);
       } else {
         setError(data.message || 'Registration failed');
       }
@@ -56,7 +56,7 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin }) => {
     <div className="auth-container">
       <div className="auth-card">
         <h2>Create Account 🚀</h2>
-        <p>Join our AI chatbot community</p>
+        <p>Join our AI community for premium tools</p>
         
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
@@ -112,6 +112,16 @@ const Signup = ({ onSignupSuccess, onSwitchToLogin }) => {
           <span className="switch-link" onClick={onSwitchToLogin}>
             Sign in
           </span>
+        </div>
+
+        <div className="auth-actions">
+          <button 
+            type="button"
+            className="back-button"
+            onClick={onSwitchToChat}
+          >
+            ← Back to Public Chat
+          </button>
         </div>
       </div>
     </div>

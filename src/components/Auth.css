@@ -185,6 +185,31 @@
   border-left: 4px solid #065f46;
 }
 
+/* Back Button Styles */
+.auth-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.back-button {
+  background: transparent;
+  color: #667eea;
+  border: 1px solid #667eea;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.back-button:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-1px);
+}
+
 /* Terms Agreement */
 .auth-agree {
   display: flex;
@@ -263,5 +288,10 @@
   
   .auth-button {
     padding: 12px;
+  }
+  
+  .back-button {
+    padding: 8px 16px;
+    font-size: 13px;
   }
 }

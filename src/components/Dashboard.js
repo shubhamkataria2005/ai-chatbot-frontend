@@ -8,8 +8,9 @@ import WeatherPredictor from './tools/WeatherPredictor';
 import CarRecognizer from './tools/CarRecognizer';
 import RetailDealsPredictor from './tools/RetailDealsPredictor';
 
-const Dashboard = ({ user, sessionToken, onLogout }) => {
+const Dashboard = ({ user, sessionToken, onLogout, onSwitchToChat }) => {
   const [activeTool, setActiveTool] = useState('chat');
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const tools = [
     { id: 'chat', name: 'AI Chatbot', icon: '💬', description: 'Chat with AI assistant' },
@@ -23,6 +24,12 @@ const Dashboard = ({ user, sessionToken, onLogout }) => {
 
   const handleToolClick = (toolId) => {
     setActiveTool(toolId);
+    setShowMobileMenu(false);
+  };
+
+  const handleLogout = () => {
+    setShowMobileMenu(false);
+    onLogout();
   };
 
   const renderActiveTool = () => {
@@ -48,28 +55,70 @@ const Dashboard = ({ user, sessionToken, onLogout }) => {
 
   return (
     <div className="dashboard">
-      {/* Mobile Header with Scrollable Tools */}
+      {/* Mobile Header */}
       <div className="mobile-header">
-        <div className="mobile-tools-scroll">
-          {tools.map(tool => (
-            <div
-              key={tool.id}
-              className={`mobile-tool-item ${activeTool === tool.id ? 'active' : ''}`}
-              onClick={() => handleToolClick(tool.id)}
+        <div className="mobile-header-top">
+          <div className="mobile-menu-toggle">
+            <button 
+              className="menu-button"
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
             >
-              <span className="mobile-tool-icon">{tool.icon}</span>
-              <span className="mobile-tool-name">{tool.name}</span>
-            </div>
-          ))}
+              ☰
+            </button>
+          </div>
+          <div className="mobile-welcome">
+            <span>Welcome, {user.username}!</span>
+          </div>
         </div>
+        
+        {/* Mobile Tools Navigation */}
+        <div className="mobile-tools-container">
+          <div className="mobile-tools-scroll">
+            {tools.map(tool => (
+              <div
+                key={tool.id}
+                className={`mobile-tool-item ${activeTool === tool.id ? 'active' : ''}`}
+                onClick={() => handleToolClick(tool.id)}
+              >
+                <span className="mobile-tool-icon">{tool.icon}</span>
+                <span className="mobile-tool-name">{tool.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        {showMobileMenu && (
+          <div className="mobile-menu-overlay">
+            <div className="mobile-menu-content">
+              <div className="mobile-menu-header">
+                <h3>🤖 SHUBHAM AI Studio</h3>
+                <button 
+                  className="close-menu"
+                  onClick={() => setShowMobileMenu(false)}
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="mobile-menu-items">
+                <button 
+                  className="mobile-menu-item logout"
+                  onClick={handleLogout}
+                >
+                  🚪 Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - No fixed margins, let flexbox handle it */}
       <div className="main-content">
         {renderActiveTool()}
       </div>
 
-      {/* Desktop Sidebar - Only visible on desktop */}
+      {/* Desktop Sidebar */}
       <div className="desktop-sidebar">
         <div className="sidebar-header">
           <h2>🤖 SHUBHAM AI Studio</h2>

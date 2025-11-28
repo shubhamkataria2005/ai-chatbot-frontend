@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Auth.css';
 import { API_BASE_URL } from '../config';
 
-const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
+const Login = ({ onLoginSuccess, onSwitchToSignup, onSwitchToChat }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -15,7 +15,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    setError(''); // Clear error when user types
+    setError('');
   };
 
   const handleSubmit = async (e) => {
@@ -50,7 +50,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
     <div className="auth-container">
       <div className="auth-card">
         <h2>Welcome Back! 👋</h2>
-        <p>Sign in to your account</p>
+        <p>Sign in to access premium AI tools</p>
         
         {error && <div className="error-message">{error}</div>}
         
@@ -93,6 +93,16 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
           <span className="switch-link" onClick={onSwitchToSignup}>
             Sign up
           </span>
+        </div>
+
+        <div className="auth-actions">
+          <button 
+            type="button"
+            className="back-button"
+            onClick={onSwitchToChat}
+          >
+            ← Back to Public Chat
+          </button>
         </div>
       </div>
     </div>

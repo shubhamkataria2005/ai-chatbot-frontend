@@ -96,8 +96,24 @@ const Chat = ({ user, sessionToken }) => {
 
   return (
     <div className="chat-container">
-      {/* Header - Simplified for Dashboard */}
+      {/* Header with Video Background */}
       <div className="chat-header">
+        {/* Video Background for Header Only */}
+        <div className="header-video-background">
+          <video 
+            autoPlay 
+            muted 
+            loop 
+            playsInline
+            preload="auto"
+            className="header-background-video"
+          >
+            <source src="/videos/background_video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="header-video-overlay"></div>
+        </div>
+        
         <div className="header-content">
           <h1>💬 AI Chatbot</h1>
           <p>Chat with your intelligent AI assistant</p>
@@ -128,23 +144,23 @@ const Chat = ({ user, sessionToken }) => {
         <div className="messages-container">
           <div className="messages-content">
             {messages.map((message, index) => (
-            <div key={index} className={`message ${message.sender}`}>
-              <div className="message-bubble">
-              {message.text}
-            </div>
-          </div>
-          ))}
-             {isLoading && (
+              <div key={index} className={`message ${message.sender}`}>
+                <div className="message-bubble">
+                  {message.text}
+                </div>
+              </div>
+            ))}
+            {isLoading && (
               <div className="message bot">
                 <div className="message-bubble loading">
-                 <div className="typing-dots">
-                   <span></span>
-                   <span></span>
-                   <span></span>
-                 </div>
-               </div>
+                  <div className="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
               </div>
-             )}
+            )}
             <div ref={messagesEndRef} />
           </div>
         </div>

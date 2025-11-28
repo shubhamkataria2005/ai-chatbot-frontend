@@ -11,7 +11,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [sessionToken, setSessionToken] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  // REMOVED: const [error, setError] = useState(''); // This was causing the build error
 
   // Check if user is already logged in - FIXED JSON PARSE
   useEffect(() => {
@@ -87,7 +87,7 @@ function App() {
     // Validate that we have the required data
     if (!userData || !token) {
       console.error('❌ Missing userData or token in handleLoginSuccess');
-      setError('Authentication failed. Please try logging in again.');
+      // REMOVED: setError('Authentication failed. Please try logging in again.');
       setCurrentView('login');
       return;
     }
